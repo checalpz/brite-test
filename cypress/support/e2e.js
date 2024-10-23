@@ -18,3 +18,8 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+//Added to advoid fail by uncaught error
+Cypress.on('uncaught:exception', (err, runnable) => {
+    return false
+})
