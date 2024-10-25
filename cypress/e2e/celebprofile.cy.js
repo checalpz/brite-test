@@ -11,7 +11,7 @@ describe('Celeb profile', () => {
 
   sizes.forEach((size) => {
     context("See movie info already completed by an actor ", () => {
-      it('The last Nicolas Cage movie Completed', () => {
+      it(`The last Nicolas Cage movie Completed. Size: ${size}`, () => {
 
         //Adjust the browser resolution
         if (Cypress._.isArray(size)) {
