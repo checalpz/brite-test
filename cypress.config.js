@@ -5,7 +5,11 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: 'https://www.imdb.com',
+    baseUrl: 'https://www.imdb.com',    //default
     videoUploadOnPasses: false
   },
+  env: {
+    apiBaseUrl : 'https://pokeapi.co'
+
+  }
 });
