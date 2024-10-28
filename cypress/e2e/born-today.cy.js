@@ -1,5 +1,8 @@
 const sizes = Cypress.env('sizes')
 
+/*
+    Navigate to the Born Today section
+*/
 function navigate(size) {
     if (Cypress._.isArray(size)) {
         cy.viewport(size[0], size[1]);
@@ -31,22 +34,28 @@ function navigate(size) {
     cy.getByData(`selected-input-chip-list-birthday-${daysAgo(0)}`).click();
 }
 
+/*
+    Given a number, return that number of day ago with the format: mm-dd (e.g. 10-25)
+*/
 function daysAgo(num) {
-    const now = new Date(Date.now())
+    let now = new Date(Date.now())
     now.setTime(now.getTime() + (-num * 24 * 60 * 60 * 1000));
 
-    const dd = now.getDate()      // Get the day of the month
-    const mm = now.getMonth() + 1  // Get month
+    let dd = now.getDate()      // Get the day of the month
+    let mm = now.getMonth() + 1  // Get month
 
     return mm + '-' + dd
 }
 
+/*
+    Given a number, return that number of years ago with the format: yyyy-mm-dd (e.g. 1984-10-25)
+*/
 function yearsAgo(num) {
-    const now = new Date(Date.now())
+    let now = new Date(Date.now())
     now.setFullYear(now.getFullYear() - num)
-    const dd = now.getDate()
-    const mm = now.getMonth() + 1
-    const yyyy = now.getFullYear()
+    let dd = now.getDate()
+    let mm = now.getMonth() + 1
+    let yyyy = now.getFullYear()
 
     return yyyy + '-' + mm + '-' + dd
 }
@@ -61,48 +70,48 @@ describe('Born today section ', () => {
 
     sizes.forEach((size) => {
         context(`Celebrities Birthday. Size: ${size}`, () => {
-            it("Celebrities born yesterday", () => {
+            it('Celebrities born yesterday', () => {
 
                 navigate(size);
 
                 // Introduce the new filter: Birthday yesterday
-                cy.getByData("accordion-item-birthdayAccordion").click()
-                cy.getByData("birthday-input-test-id").type(`${daysAgo(1)}{enter}`)
+                cy.getByData('accordion-item-birthdayAccordion').click()
+                cy.getByData('birthday-input-test-id').type(`${daysAgo(1)}{enter}`)
 
-                cy.getByData("adv-search-get-results")
+                cy.getByData('adv-search-get-results')
                     .should('be.visible')
                     .click()
 
                 // Click on the 3rd result and take a screenshot
-                cy.getByData("nlib-title").eq(2).click()
+                cy.getByData('nlib-title').eq(2).click()
 
                 cy.screenshot()
             })
 
-            it.only("Celebrities born 40 years ago", () => {
+            it.only('Celebrities born 40 years ago', () => {
 
                 navigate(size);
 
                 //Introduce the new filter:  Birth Date 40 years ago
-                cy.getByData("accordion-item-birthDateAccordion").click()
+                cy.getByData('accordion-item-birthDateAccordion').click()
 
                 // "From" option of the date picker
-                cy.getByData("birthDate-start").type(`${yearsAgo(40)}`)
+                cy.getByData('birthDate-start').type(`${yearsAgo(40)}`)
 
                 // "To" option of the string field (only the year)
-                cy.getByData("birthYearMonth-end").type(`${yearsAgo(40).split('-')[0]}{enter}`)
+                cy.getByData('birthYearMonth-end').type(`${yearsAgo(40).split('-')[0]}{enter}`)
 
-                cy.getByData("adv-search-get-results")
+                cy.getByData('adv-search-get-results')
                     .should('be.visible')
                     .click()
 
                 // Check the first result if has any link
-                cy.get("div.ipc-html-content-inner-div").eq(0).then($elem => {
-                    if ($elem.find("a[href]").length > 0) {
-                        cy.get($elem).find("a").first().click()
+                cy.get('div.ipc-html-content-inner-div').eq(0).then($elem => {
+                    if ($elem.find('a[href]').length > 0) {
+                        cy.get($elem).find('a').first().click()
                     }
                     else {
-                        cy.log("Link not found in the description")
+                        cy.log('Link not found in the description')
                     }
                 })
 

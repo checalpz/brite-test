@@ -1,6 +1,6 @@
 function morePotency(berries) {
-    var potency = 0
-    var resultBerry = null
+    let potency = 0
+    let resultBerry = null
 
     berries.forEach(function (berry) {
         if (berry.potency > potency) {
@@ -13,17 +13,10 @@ function morePotency(berries) {
 }
 
 function getPotencyByFlavor(respBody, flavorName){
-    var flavorPotency = 0
     
-    respBody.forEach(function(flavor){
-        if(flavor.flavor.name === flavorName){
-            flavorPotency = flavor.potency
-        }else{
-            return null
-        }
-    })
-    return flavorPotency
-
+    const flavorPotency = respBody.find((flavor) => flavor.flavor.name === flavorName);
+    
+    return flavorPotency.potency;
 }
 
 const berryFlavor = 'spicy'
@@ -47,7 +40,7 @@ describe('Spicy flavour API', () => {
             const morePotencyBerry = morePotency(resp.body['berries'])
             const berryName = morePotencyBerry['berry']['name']
             const berryPotency = morePotencyBerry['potency']
-            const berryId = parseInt(morePotencyBerry['berry']['url'].split("/").at(-2))
+            const berryId = parseInt(morePotencyBerry['berry']['url'].split('/').at(-2))
 
             cy.api({
                 method: 'GET',

@@ -10,7 +10,7 @@ describe('Celeb profile', () => {
   })
 
   sizes.forEach((size) => {
-    context("See movie info already completed by an actor ", () => {
+    context('See movie info already completed by an actor ', () => {
       it(`The last Nicolas Cage movie Completed. Size: ${size}`, () => {
 
         //Adjust the browser resolution
@@ -25,15 +25,15 @@ describe('Celeb profile', () => {
 
         // Search actor in the search box and visit his profile
         cy.get('#nav-search-form')
-          .should("exist")
+          .should('exist')
           .type(`${actor}{enter}`)
 
         //cy.get('#suggestion-search-button').click()
 
-        cy.get("li").contains(`${actor}`).click()
+        cy.get('li').contains(`${actor}`).click()
 
         // Confirm  the URL
-        cy.location("pathname").should("eq", "/name/nm0000115/")
+        cy.location('pathname').should('eq', '/name/nm0000115/')
 
         // Open the upcoming section
         cy.getByData('accordion-item-actor-upcoming-projects').click()
