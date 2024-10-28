@@ -1,8 +1,8 @@
-const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
 const actor = 'Nicolas Cage'
+const sizes = Cypress.env('sizes')
 
 describe('Celeb profile', () => {
-
+  
   beforeEach(() => {
 
     cy.visit('/')

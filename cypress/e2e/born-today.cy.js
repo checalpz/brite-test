@@ -1,5 +1,4 @@
-//const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
-const sizes = [[1000, 768]]
+const sizes = Cypress.env('sizes')
 
 function navigate(size) {
     if (Cypress._.isArray(size)) {

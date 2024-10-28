@@ -59,7 +59,6 @@ describe('Spicy flavour API', () => {
                 expect(resp.body['id']).to.eq(berryId)
                 expect(getPotencyByFlavor(resp.body['flavors'], berryFlavor)).to.eq(berryPotency)
 
-                // COMPARE RESPONSES
             })
         })
 
@@ -67,5 +66,3 @@ describe('Spicy flavour API', () => {
     })
 
 })
-
-
