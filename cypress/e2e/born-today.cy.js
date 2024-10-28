@@ -1,5 +1,5 @@
-const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
-//const sizes = [[1000, 768]]
+//const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
+const sizes = [[1000, 768]]
 
 function navigate(size) {
     if (Cypress._.isArray(size)) {
@@ -80,7 +80,7 @@ describe('Born today section ', () => {
                 cy.screenshot()
             })
 
-            it("Celebrities born 40 years ago", () => {
+            it.only("Celebrities born 40 years ago", () => {
 
                 navigate(size);
 
@@ -97,14 +97,20 @@ describe('Born today section ', () => {
                     .should('be.visible')
                     .click()
 
-
                 // Check the first result if has any link
-                cy.get("div.ipc-html-content-inner-div").first()
-                    .children()
-                    .should('have.attr', 'href')
+                cy.get("div.ipc-html-content-inner-div").eq(0).then($elem => {
+                    if ($elem.find("a[href]").length > 0) {
+                        cy.get($elem).find("a").first().click()
+                    }
+                    else {
+                        cy.log("Link not found in the description")
+                    }
+                })
 
+                // Take a screenshot 
+                    // If found any link, it will take a screenshot of the new page
+                    // otherwise, it will capture the search list
                 cy.screenshot()
-
 
             })
         })

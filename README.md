@@ -9,3 +9,11 @@ Brite QA Engineer Challenge
 npm install cypress --save-dev
 npx cypress open
 ```
+
+
+## Plugin 
+
+### API Testing
+```shell
+npm i cypress-plugin-api
+```
