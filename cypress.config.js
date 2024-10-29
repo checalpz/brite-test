@@ -7,11 +7,10 @@ module.exports = defineConfig({
     },
     baseUrl: 'https://www.imdb.com',    //default
     videoUploadOnPasses: false,
-    numTestsKeptInMemory: 20      // lowered the test to advoid crashing during the executions (default: 50)
+    numTestsKeptInMemory: 20      // lower to advoid crashing during the executions (default: 50)
   },
   env: {
     sizes: [[1600, 900], [1024, 768], [1000, 660], [759, 768]],
-    //sizes: [[1600, 900], [759, 768]],
     apiBaseUrl : 'https://pokeapi.co'
 
   }
