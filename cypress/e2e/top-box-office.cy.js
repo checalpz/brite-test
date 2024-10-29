@@ -1,5 +1,4 @@
-const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
-//const sizes = [[1000, 768]]
+const sizes = Cypress.env('sizes')
 
 describe('Top Box Office section ', () => {
 
@@ -10,7 +9,7 @@ describe('Top Box Office section ', () => {
     })
 
     sizes.forEach((size) => {
-        context("Rate a movie", () => {
+        context('Rate a movie', () => {
             it(`Rate the second movie in the top box office. Size: ${size}`, () => {
                 if (Cypress._.isArray(size)) {
                     cy.viewport(size[0], size[1])
@@ -32,7 +31,7 @@ describe('Top Box Office section ', () => {
                 cy.get('.ipc-list-item__text').contains('Top Box Office').click()
 
                 // Confirm the URL
-                cy.location("pathname").should("eq", "/chart/boxoffice/")
+                cy.location('pathname').should('eq', '/chart/boxoffice/')
 
                 // Click on the second movie
                 cy.get('.ipc-metadata-list-summary-item')
@@ -54,8 +53,7 @@ describe('Top Box Office section ', () => {
                 }
 
                 // Rating with 5 starts
-                //cy.get('.ipc-starbar__rating__button').eq(4).click({ force: true }) // Option 1
-                cy.get('[aria-label="Rate 5"]').click({ force: true })                // Option 2
+                cy.get('[aria-label="Rate 5"]').click({ force: true })
 
                 cy.get('.ipc-rating-prompt__rate-button').click()
 

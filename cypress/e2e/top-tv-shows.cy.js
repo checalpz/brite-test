@@ -1,5 +1,4 @@
-const sizes = [[1600, 900], [1024, 768], [1000, 660], [759, 768]]
-//const sizes = [[1000, 768]]
+const sizes = Cypress.env('sizes')
 
 describe('Top 250 TV show section ', () => {
   
@@ -10,7 +9,7 @@ describe('Top 250 TV show section ', () => {
   })
 
   sizes.forEach((size) => {
-    context("See photo of a TV show", () => {
+    context('See photo of a TV show', () => {
       it(`See 2nd photo of Danny Trejo . Size: ${size}`, () => {
 
         if (Cypress._.isArray(size)) {
@@ -34,13 +33,13 @@ describe('Top 250 TV show section ', () => {
         }
 
         // Confirm the URL
-        cy.location("pathname").should("eq", "/chart/toptv/")
+        cy.location('pathname').should('eq', '/chart/toptv/')
 
         // Search and click in Breaking Bad serie
         cy.get('h3').contains('Breaking Bad').click()
 
         // Go to photos
-        cy.get('.ipc-responsive-button__text').contains("All topics").click()
+        cy.get('.ipc-responsive-button__text').contains('All topics').click()
 
         cy.getByData('topic-popular')
           .within(() => {
@@ -49,9 +48,6 @@ describe('Top 250 TV show section ', () => {
 
         // Filtering by Danny Trejo's photos
         cy.getByData('image-chip-dropdown-test-id').click()
-
-        //<option value="nm0001803">Danny Trejo (6)</option>     
-        //cy.get('#Person-filter-select-dropdown').select('Danny Trejo (6)') // OK
 
         cy.get('#Person-filter-select-dropdown')    //filter only by the name instead the full text displayed in the dropdown
           .find('option')
