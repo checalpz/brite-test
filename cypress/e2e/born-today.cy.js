@@ -1,6 +1,65 @@
 const sizes = Cypress.env('sizes')
 
 /*
+    Get the dates
+*/
+function formatDate(format = 'YYYY-MM-DD', relativeDate = 'today') {
+    // Helper function to format the date
+    function formatDateString(date, format) {
+        const pad = (num) => num.toString().padStart(2, '0'); // Helper to pad single digit numbers
+        
+        let year = date.getFullYear();
+        let month = pad(date.getMonth() + 1); // Months are 0-indexed
+        let day = pad(date.getDate());
+        
+        // Replace format placeholders with actual date values
+        return format.replace('YYYY', year)
+                     .replace('MM', month)
+                     .replace('DD', day);
+    }
+
+    // Handle relative dates
+    function getRelativeDate(relativeDate) {
+        const today = new Date();
+        let resultDate;
+
+        switch (relativeDate.toLowerCase()) {
+            case 'yesterday':
+                resultDate = new Date(today);
+                resultDate.setDate(today.getDate() - 1);
+                break;
+            case 'tomorrow':
+                resultDate = new Date(today);
+                resultDate.setDate(today.getDate() + 1);
+                break;
+            default:
+                const regex = /(\d+)\s*(years?|months?|days?)\s*ago/i;
+                const match = relativeDate.match(regex);
+
+                if (match) {
+                    const amount = parseInt(match[1], 10);
+                    const unit = match[2].toLowerCase();
+                    resultDate = new Date(today);
+                    
+                    if (unit.includes('year')) resultDate.setFullYear(today.getFullYear() - amount);
+                    else if (unit.includes('month')) resultDate.setMonth(today.getMonth() - amount);
+                    else if (unit.includes('day')) resultDate.setDate(today.getDate() - amount);
+                } else {
+                    resultDate = today; // Default to today if no match
+                }
+        }
+
+        return resultDate;
+    }
+
+    // Get the relative date
+    const date = getRelativeDate(relativeDate);
+    
+    // Format the date according to the requested format
+    return formatDateString(date, format);
+}
+
+/*
     Navigate to the Born Today section
 */
 function navigate(size) {
@@ -27,38 +86,13 @@ function navigate(size) {
     // Confirm the URL              
     cy.location().should((loc) => {
         expect(loc.pathname).to.eq('/search/name/');
-        expect(loc.search).to.eq(`?birth_monthday=${daysAgo(0)}`);
+        expect(loc.search).to.eq(`?birth_monthday=${formatDate('MM-DD', 'today')}`);
     });
 
     // Remove the default filter (today)
-    cy.getByData(`selected-input-chip-list-birthday-${daysAgo(0)}`).click();
+    cy.getByData(`selected-input-chip-list-birthday-${formatDate('MM-DD', 'today')}`).click();
 }
 
-/*
-    Given a number, return that number of day ago with the format: mm-dd (e.g. 10-25)
-*/
-function daysAgo(num) {
-    let now = new Date(Date.now())
-    now.setTime(now.getTime() + (-num * 24 * 60 * 60 * 1000));
-
-    let dd = now.getDate()      // Get the day of the month
-    let mm = now.getMonth() + 1  // Get month
-
-    return mm + '-' + dd
-}
-
-/*
-    Given a number, return that number of years ago with the format: yyyy-mm-dd (e.g. 1984-10-25)
-*/
-function yearsAgo(num) {
-    let now = new Date(Date.now())
-    now.setFullYear(now.getFullYear() - num)
-    let dd = now.getDate()
-    let mm = now.getMonth() + 1
-    let yyyy = now.getFullYear()
-
-    return yyyy + '-' + mm + '-' + dd
-}
 
 describe('Born today section ', () => {
 
@@ -76,7 +110,7 @@ describe('Born today section ', () => {
 
                 // Introduce the new filter: Birthday yesterday
                 cy.getByData('accordion-item-birthdayAccordion').click()
-                cy.getByData('birthday-input-test-id').type(`${daysAgo(1)}{enter}`)
+                cy.getByData('birthday-input-test-id').type(`${formatDate('MM-DD', 'yesterday')}{enter}`)
 
                 cy.getByData('adv-search-get-results')
                     .should('be.visible')
@@ -88,7 +122,7 @@ describe('Born today section ', () => {
                 cy.screenshot()
             })
 
-            it.only('Celebrities born 40 years ago', () => {
+            it('Celebrities born 40 years ago', () => {
 
                 navigate(size);
 
@@ -96,10 +130,10 @@ describe('Born today section ', () => {
                 cy.getByData('accordion-item-birthDateAccordion').click()
 
                 // "From" option of the date picker
-                cy.getByData('birthDate-start').type(`${yearsAgo(40)}`)
+                cy.getByData('birthDate-start').type(`${formatDate('YYYY-MM-DD', '40 years ago')}`)
 
                 // "To" option of the string field (only the year)
-                cy.getByData('birthYearMonth-end').type(`${yearsAgo(40).split('-')[0]}{enter}`)
+                cy.getByData('birthYearMonth-end').type(`${formatDate('YYYY-MM', '40 years ago')}{enter}`)
 
                 cy.getByData('adv-search-get-results')
                     .should('be.visible')
